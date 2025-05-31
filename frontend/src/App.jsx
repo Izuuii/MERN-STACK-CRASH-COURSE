@@ -1,30 +1,25 @@
 import {React, useEffect, useState} from 'react'
 import './App.css'
-import axios from 'axios'
+import {getPosts, getPost, createPost, updatePost, deletePost} from './api.js'
+// Importing the necessary functions from api.js
 
 function App() {
 
-  const[data, setData] = useState()
+  const[posts, setPosts] = useState()
 
   useEffect(() => {
-    async function grabData() {
-      const response = await axios.get('http://localhost:3000/posts')
-      if(response.status === 200) {
-        setData(response.data)
-        console.log(response.data)
-      }
-      else {
-        console.error('Error fetching data:', response.statusText)
+    async function loadAllPosts(){
+      let data = await getPosts() // Fetching all posts using the getPosts function
+      if (data){
+        setPosts(data) // Setting the fetched posts to state
       }
     }
-
-  grabData()
+    loadAllPosts() // Calling the function to load posts
   }, [])// Empty dependency array to run only once on mount
 
   return (
     <div className="App">
-      {JSON.stringify(data)}
-      <h1>Posts</h1>
+      {JSON.stringify(posts)}
     </div>
   )
 }
