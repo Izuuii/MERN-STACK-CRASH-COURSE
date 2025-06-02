@@ -8,7 +8,8 @@ const Home = () => {
     useEffect(() => {
         async function loadAllPosts() {
             const data = await getPosts()
-            setPosts(data)
+            const sortedPosts = data.sort((a, b) => new Date(b.dateCreated) - new Date(a.dateCreated))
+            setPosts(sortedPosts) // Set the sorted posts to state
         }
         loadAllPosts() // This function will be called when the component mounts
     }, []) // Empty dependency array ensures this runs once on mount
@@ -17,7 +18,7 @@ const Home = () => {
         <div className="max-w-screen-xl mx-auto px-4 py-10">
             {/* Render BlogCard for each post */}
             {posts.map((post) => (
-                <div key={post.id} className="flex justify-center mb-6">
+                <div key={post._id} className="flex justify-center mb-6">
                     <div className="w-full max-w-2xl">
                         <BlogCard post={post} />
                     </div>
