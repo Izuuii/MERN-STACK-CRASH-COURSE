@@ -34,7 +34,7 @@ const Readblog = () => {
     }
 
     return (
-        <div className="max-w-screen-md mx-auto px-4 py-10 text-white">
+        <div className="max-w-screen-md mx-auto p-10 text-white">
         <button
             onClick={() => navigate(-1)}
             className="mb-6 px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded shadow"

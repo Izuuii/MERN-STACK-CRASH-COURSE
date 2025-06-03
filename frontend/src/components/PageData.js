@@ -12,7 +12,7 @@ export const PageData = [
     path: '/profile',
     },
     {
-    name: 'About Us',
+    name: 'About',
     path: '/about',
     },
     {

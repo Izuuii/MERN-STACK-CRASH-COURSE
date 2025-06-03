@@ -25,7 +25,7 @@ const Contact = () => {
     }
 
     return (
-        <div className="flex justify-center py-10 relative">
+        <div className="flex justify-center py-10 relative px-10">
         <form
             onSubmit={handleSubmit}
             className="w-full max-w-xl bg-gray-900 text-white p-6 rounded-lg border border-gray-700"

@@ -7,7 +7,7 @@ const Navbar = () => {
 
     return (
         <nav className="bg-white border-gray-200 dark:bg-gray-900 w-full">
-            <div className="max-w-screen-xl mx-auto px-4 py-4 flex items-center justify-between relative mb-4">
+            <div className="max-w-screen-xl mx-auto px-4 py-4 flex items-center justify-between relative mb-2">
                 
                 {/* Placeholder div for potential logo or to balance layout */}
                 <div className="w-10 h-10 md:hidden" />
@@ -53,7 +53,7 @@ const Navbar = () => {
 
             {/* Mobile dropdown nav */}
             {menuOpen && (
-                <div className="md:hidden px-4 pb-4">
+                <div className="md:hidden px-4">
                     <ul className="flex flex-col space-y-2 border border-gray-100 rounded-lg bg-gray-50 dark:bg-gray-800 dark:border-gray-700 p-4">
                         {PageData.map((page) => (
                             <li key={page.path}>

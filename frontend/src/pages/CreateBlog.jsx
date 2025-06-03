@@ -39,10 +39,10 @@ const CreateBlog = () => {
     }
 
     return (
-        <div className="flex justify-center py-10 relative">
+        <div className="flex justify-center py-10 relative px-10">
             <form
                 onSubmit={handleSubmit}
-                className="w-full max-w-2xl border border-gray-700 rounded-lg p-6 bg-gray-900 text-white"
+                className="w-full max-w-xl bg-gray-900 text-white p-6 rounded-lg border border-gray-700"
             >
                 <label className="block mb-2 text-sm font-medium">Blog Post Title:</label>
                 <input
