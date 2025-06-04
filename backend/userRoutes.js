@@ -1,9 +1,11 @@
 const express = require('express');
 const database = require("./connect")
 const ObjectId = require('mongodb').ObjectId; // Create a new router object   
+const bcrypt = require("bcrypt");
 
 
 let userRoutes = express.Router()
+const saltRounds = 10;
 
 //#1 Retrieve All
 //http://localhost:3000/users
@@ -32,15 +34,25 @@ userRoutes.route("/users/:id").get(async(request, response) =>  {
 //#3 Create One
 userRoutes.route("/users").post(async(request, response) =>  {
     let db = database.getDb()
-    let mongoObject = {
-        name: request.body.name,
-        email:request.body.email,
-        password:request.body.password,
-        joinDate:new Date(),
-        posts: []
+
+    const takenEmail = await db.collection("users").findOne({email: request.body.email})
+
+    if (takenEmail) {
+        // Return a 400 Bad Request status for duplicate email
+        return response.status(400).json({ error: "Email already exists" })
+    } else {
+        const hash = await bcrypt.hash(request.body.password, saltRounds)
+
+        let mongoObject = {
+            name: request.body.name,
+            email:request.body.email,
+            password:hash,
+            joinDate:new Date(),
+            posts: []
+        }
+        let data = await db.collection("users").insertOne(mongoObject)
+        response.json(data)//send back the data
     }
-    let data = await db.collection("users").insertOne(mongoObject)
-    response.json(data)//send back the data
 })
 
 

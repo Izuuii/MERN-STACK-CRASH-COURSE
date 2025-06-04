@@ -12,13 +12,17 @@ const CreateUser = () => {
         setUser({ ...user, [e.target.name]: e.target.value })
     }
 
-    async function handleSubmit(e) {
-        e.preventDefault()
-        const response = await createUser(user)
-        if (response.status !== 200) {
-            alert("Error creating user: " + response.statusText)
-        }
+async function handleSubmit(e) {
+    e.preventDefault();
+    try {
+        await createUser(user);
+        alert("User created!");
+    } catch (err) {
+        // Check for backend error message
+        const errorMsg = err.response?.data?.error || err.message;
+        alert("Error creating user: " + errorMsg);
     }
+}
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 px-4 py-8">
