@@ -1,8 +1,9 @@
 import React from 'react'
+import CreateUser from '../components/CreateUser'
 
 const Landing = () => {
     return (
-        <div>Landing</div>
+        <div><CreateUser/></div>
     )
 }
 
