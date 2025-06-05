@@ -18,8 +18,13 @@ const Login = ({ noFullScreen, onToggle }) => {
         e.preventDefault();
         try {
             const response = await verifyUser(user);
+            if (response && response.token) {
+            sessionStorage.setItem('User', response.token);
+            navigate('/home');
             alert("Login successful!");
-            navigate('/'); // Change '/' to your desired route after login
+            } else {
+                alert("Login failed: No token received.");
+            }
         } catch (err) {
             const errorMsg = err.response?.data?.error || err.message;
             alert("Login failed: " + errorMsg);

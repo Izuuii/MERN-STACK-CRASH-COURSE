@@ -83,11 +83,11 @@ export async function updateUser(id, user) {
     return response.data;
 }
 
-export async function verifyUser(user){
-    const response = await axios.post(`${URL}/users/login`, user); 
-    if (response.data.success){
-        return response.data.user;
+export async function verifyUser(user) {
+    const response = await axios.post(`${URL}/users/login`, user);
+    if (response.data.success) {
+        return response.data; // Return the actual data
     } else {
-        throw new Error('Error verifying user: ' + response.statusText);
+        throw new Error(response.data.message || 'Error verifying user');
     }
 }
