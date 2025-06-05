@@ -79,5 +79,24 @@ userRoutes.route("/users/:id").delete(async(request, response) =>  {
     response.json(data)//send back the data
 })
 
+
+//#6 Login Route
+userRoutes.route("/users/login").post(async(request, response) =>  {
+    let db = database.getDb()
+
+    const user = await db.collection("users").findOne({email: request.body.email})
+
+    if (user) {
+        let confirmation = await bcrypt.compare(request.body.password, user.password)
+        if (confirmation){
+            response.json({success: true, message: "Login successful", user})
+        } else {
+            response.json({success: false, message: "Incorrect password"})
+        }
+    }else{
+        response.json({success: false, message: "User not found"})
+    }
+})
+
 module.exports = userRoutes
 // Export the router object

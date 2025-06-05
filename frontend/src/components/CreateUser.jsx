@@ -1,7 +1,7 @@
-import { useState, React } from 'react'
+import React, { useState } from 'react'
 import { createUser } from '../api'
 
-const CreateUser = () => {
+const CreateUser = ({ noFullScreen, onToggle }) => {
     const [user, setUser] = useState({
         name: '',
         email: '',
@@ -12,20 +12,19 @@ const CreateUser = () => {
         setUser({ ...user, [e.target.name]: e.target.value })
     }
 
-async function handleSubmit(e) {
-    e.preventDefault();
-    try {
-        await createUser(user);
-        alert("User created!");
-    } catch (err) {
-        // Check for backend error message
-        const errorMsg = err.response?.data?.error || err.message;
-        alert("Error creating user: " + errorMsg);
+    async function handleSubmit(e) {
+        e.preventDefault();
+        try {
+            await createUser(user);
+            alert("User created!");
+        } catch (err) {
+            const errorMsg = err.response?.data?.error || err.message;
+            alert("Error creating user: " + errorMsg);
+        }
     }
-}
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 px-4 py-8">
+        <div className={`${noFullScreen ? '' : 'min-h-screen flex items-center justify-center'} bg-gray-50 dark:bg-gray-900 px-4 py-8`}>
             <form
                 onSubmit={handleSubmit}
                 className="w-full max-w-md bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md space-y-5"
@@ -33,7 +32,6 @@ async function handleSubmit(e) {
                 <h2 className="text-2xl font-semibold text-gray-800 dark:text-white text-center">
                     Create New User
                 </h2>
-
                 <input
                     type="text"
                     name="name"
@@ -71,6 +69,16 @@ async function handleSubmit(e) {
                 >
                     Create User
                 </button>
+                
+                <div className="flex justify-center">
+                    <button
+                        type="button"
+                        onClick={onToggle}
+                        className="text-blue-600 hover:underline text-sm"
+                    >
+                        Login existing account
+                    </button>
+                </div>
             </form>
         </div>
     )
