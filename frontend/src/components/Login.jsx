@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { verifyUser } from '../api'
 import { useNavigate } from 'react-router-dom'
+import axios from 'axios'
 
 const Login = ({ noFullScreen, onToggle }) => {
     const [user, setUser] = useState({
@@ -19,9 +20,10 @@ const Login = ({ noFullScreen, onToggle }) => {
         try {
             const response = await verifyUser(user);
             if (response && response.token) {
-            sessionStorage.setItem('User', response.token);
-            navigate('/home');
-            alert("Login successful!");
+                sessionStorage.setItem('User', response.token);
+                axios.defaults.headers.common['Authorization'] = `Bearer ${response.token}`;
+                navigate('/home');
+                alert("Login successful!");
             } else {
                 alert("Login failed: No token received.");
             }

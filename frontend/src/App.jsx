@@ -1,6 +1,6 @@
-import {React} from 'react'
+import React, { useEffect } from 'react'
 import './App.css'
-import {HashRouter as Router, Routes, Route} from 'react-router-dom'
+import { HashRouter as Router, Routes, Route } from 'react-router-dom'
 import Landing from './pages/Landing'
 import Home from './pages/Home'
 import CreateBlog from './pages/CreateBlog'
@@ -8,21 +8,29 @@ import Readblog from './pages/Readblog'
 import Profile from './pages/Profile'
 import About from './pages/About'
 import Contact from './pages/Contact'
-
 import Layout from './components/Layout'
+import axios from 'axios' // <-- Add this import
 
 function App() {
+
+  useEffect(() => {
+    let token = sessionStorage.getItem('User');
+    if (token) {
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    }
+  }, [])
+
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Landing/>} />
-        <Route element={<Layout/>}>
-          <Route path="/home" element={<Home/>} />
-          <Route path="/createblog" element={<CreateBlog/>} />
-          <Route path="/readblog/:id" element={<Readblog/>} />
-          <Route path="/profile" element={<Profile/>} />
-          <Route path="/about" element={<About/>} />
-          <Route path="/contact" element={<Contact/>} />
+        <Route path="/" element={<Landing />} />
+        <Route element={<Layout />}>
+          <Route path="/home" element={<Home />} />
+          <Route path="/createblog" element={<CreateBlog />} />
+          <Route path="/readblog/:id" element={<Readblog />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
         </Route>
       </Routes>
     </Router>

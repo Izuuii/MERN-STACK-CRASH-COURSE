@@ -1,13 +1,15 @@
 const express = require('express');
 const database = require("./connect")
 const ObjectId = require('mongodb').ObjectId; // Create a new router object   
+const jwt = require('jsonwebtoken'); // Import jsonwebtoken for token verification
+require("dotenv").config({path: "./config.env"})
 
 
 let postRoutes = express.Router()
 
 //#1 Retrieve All
 //http://localhost:3000/posts
-postRoutes.route("/posts").get(async(request, response) =>  {
+postRoutes.route("/posts").get(verifyToken, async(request, response) =>  {
     let db = database.getDb()
     let data = await db.collection("posts").find({}).toArray()
     if(data.length > 0) {
@@ -19,7 +21,7 @@ postRoutes.route("/posts").get(async(request, response) =>  {
 
 //#2 Retrieve One
 //http://localhost:3000/posts/:id
-postRoutes.route("/posts/:id").get(async(request, response) =>  {
+postRoutes.route("/posts/:id").get(verifyToken, async(request, response) =>  {
     let db = database.getDb()
     let data = await db.collection("posts").findOne({_id: new ObjectId(request.params.id)})
     if(data && Object.keys(data).length > 0) {
@@ -30,7 +32,7 @@ postRoutes.route("/posts/:id").get(async(request, response) =>  {
 })
 
 //#3 Create One
-postRoutes.route("/posts").post(async(request, response) =>  {
+postRoutes.route("/posts").post(verifyToken, async(request, response) =>  {
     let db = database.getDb()
     let mongoObject = {
         title: request.body.title,
@@ -45,7 +47,7 @@ postRoutes.route("/posts").post(async(request, response) =>  {
 
 
 //#4 Update One
-postRoutes.route("/posts/:id").put(async(request, response) =>  {
+postRoutes.route("/posts/:id").put(verifyToken, async(request, response) =>  {
     let db = database.getDb()
     let mongoObject = {
         $set: {
@@ -61,11 +63,28 @@ postRoutes.route("/posts/:id").put(async(request, response) =>  {
 })
 
 //#5 Delete One
-postRoutes.route("/posts/:id").delete(async(request, response) =>  {
+postRoutes.route("/posts/:id").delete(verifyToken, async(request, response) =>  {
     let db = database.getDb()
     let data = await db.collection("posts").deleteOne({_id: new ObjectId(request.params.id)})
     response.json(data)//send back the data
 })
 
-module.exports = postRoutes
+function verifyToken(request, response, next) {
+    const authHeader = request.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+
+    if (!token) {
+        return response.status(401).json({ message: "Unauthorized: No token provided" });
+    }
+
+    jwt.verify(token, process.env.SECRETKEY, (err, user) => {
+        if (err) {
+            return response.status(403).json({ message: "Forbidden: Invalid token" });
+        }
+        request.user = user; // Attach user info to request
+        next();
+    });
+}
+
+module.exports = postRoutes;
 // Export the router object

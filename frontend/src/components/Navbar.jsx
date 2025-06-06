@@ -1,9 +1,17 @@
 import React, { useState } from 'react'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 import { PageData } from './PageData'
 
 const Navbar = () => {
     const [menuOpen, setMenuOpen] = useState(false)
+    const navigate = useNavigate()
+
+    const handleLogout = () => {
+        sessionStorage.removeItem('User')
+        // Optionally remove axios header if you set it globally
+        // delete axios.defaults.headers.common['Authorization']
+        navigate('/')
+    }
 
     return (
         <nav className="bg-white border-gray-200 dark:bg-gray-900 w-full">
@@ -28,6 +36,16 @@ const Navbar = () => {
                             {page.name}
                         </NavLink>
                     ))}
+                </div>
+
+                {/* Logout button (right side, desktop only) */}
+                <div className="hidden md:block">
+                    <button
+                        onClick={handleLogout}
+                        className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded transition duration-200"
+                    >
+                        Logout
+                    </button>
                 </div>
 
                 {/* Burger icon (right side on mobile) */}
@@ -71,6 +89,17 @@ const Navbar = () => {
                                 </NavLink>
                             </li>
                         ))}
+                        <li>
+                            <button
+                                onClick={() => {
+                                    setMenuOpen(false)
+                                    handleLogout()
+                                }}
+                                className="w-full text-left py-2 px-3 rounded-sm bg-red-500 hover:bg-red-600 text-white font-semibold transition duration-200"
+                            >
+                                Logout
+                            </button>
+                        </li>
                     </ul>
                 </div>
             )}
